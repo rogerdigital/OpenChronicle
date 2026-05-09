@@ -193,3 +193,12 @@ def test_exclusion_with_empty_title_does_not_match_pattern(ac_root: Path) -> Non
     with patch("openchronicle.capture.scheduler.window_meta.active_window", return_value=fake_meta):
         result = scheduler_mod._build_capture(cfg, _FakeProvider(), trigger=None)
     assert result is not None
+
+
+def test_exclusion_empty_pattern_does_not_match_all(ac_root: Path) -> None:
+    """An empty string in excluded_window_title_patterns must not match every window."""
+    cfg = _exclusion_cfg(excluded_window_title_patterns=[""])
+    fake_meta = window_meta.WindowMeta(app_name="Cursor", title="main.py", bundle_id="com.todesktop")
+    with patch("openchronicle.capture.scheduler.window_meta.active_window", return_value=fake_meta):
+        result = scheduler_mod._build_capture(cfg, _FakeProvider(), trigger=None)
+    assert result is not None

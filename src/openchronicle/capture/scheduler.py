@@ -45,7 +45,7 @@ def _is_excluded(cfg: CaptureConfig, meta: window_meta.WindowMeta) -> bool:
         return True
     if cfg.excluded_window_title_patterns and meta.title:
         title_lower = meta.title.lower()
-        if any(p.lower() in title_lower for p in cfg.excluded_window_title_patterns):
+        if any(p and p.lower() in title_lower for p in cfg.excluded_window_title_patterns):
             return True
     return False
 
@@ -66,8 +66,8 @@ def _build_capture(
 
     if _is_excluded(cfg, meta):
         logger.info(
-            "capture skipped (excluded): app=%r title=%r bundle=%r",
-            meta.app_name, meta.title[:60], meta.bundle_id,
+            "capture skipped (excluded): app=%r bundle=%r",
+            meta.app_name, meta.bundle_id,
         )
         return None
 
